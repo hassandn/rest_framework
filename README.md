@@ -107,3 +107,103 @@ Class home(api_view):
   def post(self,request):
     name = request.data['name']
 ```
+و اینکه  در متد گت یو ار ال ما نمیتونه بیشتر از 2048 باشه
+# post 
+برای اینکه از متد پست استفاده کنیم در میتونیم از .data استفاده کنیم
+کدش به این صورت هست
+```django
+Class home(api_view):
+  def post(self,request):
+    name = request.data['name']
+    return response({"name":name})
+```
+این بادی رو درست کردی اون وقت درست میشه
+# serializer 3
+ما تا الان میومدیم و اطلاعات رو خودمون به طور دستی وارد میکردیم ولی در دنیای واقعی ما باید اطلاعات رو از مدل ها بگیریم
+ما باید روشی داشته باشیم که کویری ست هایی که میگیرم خودشون تبدیل بشن ه دیکشنری و تبدیلش میکنیم به دیکنشری که صورت جیسون به کاربر نشون داده بشه برای اینکار باید از serializer ها استفاده بکنیم
+serialize
+میگه که تبدیل نوع کویری ست و یا دیتا مدل ها به داده هایی هست که پایتون داره 
+deserialize 
+یعنی تبدیل نوع داده پایتون به داده هایی مثل جیسون یا ایکس ام ال
+
+سریالایز مثل فرم ها هستن باید مثل مدل ها خودمون فییلد ها رو درست کنیم و....
+Serializer مثل Form
+ModelSerializer مثل ModelForm
+خب الان میریم داخل مدل ها و یک مدل درست میکنیم
+با اسم سن و ایمیل
+```django
+form django.db import models
+Class persion(models.Model):
+  name = blah blah
+  age  = blah blah
+  email= blah blah
+  def __str__(self):
+    return self.name
+```
+بعد برای اینکه اطلاعات در داخل دیتا بیس ذخیزه بشه مینویسیم
+makemigrations
+migrate
+خب حالا توی ادمین پنل هم داریم اونو
+خب فرض کن ما میخوایم که یه اند پوینت داشته باشیم که وقتی اونو زدیم کاربر های ما رو نشون بده
+داخل سریالازر یه چیزی هست که مشخص میکنه داخل مدل چه خبر هست
+برای سریالایز کردن باید یک فایل دیگه درست کینم به نام serrialize 
+پیشنهاد میشه برای اسم گزای کلاس های سریالایزر ها اول اسم مدل رو بنویسید و بعد بنویسید سریالایزر 
+حالا فیلدی که داخل مدل داریم باید داخل سریالایزر ها بزاریم که توی سایتش هست
+```django
+from rest_framework import serializers
+
+class PersonSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    age  = serializers.IntegerField()
+    email= serializers.EmailField()
+```
+این کد برای سریالایزر هست 
+بعد از اون باید بریم توی ویو هامون تا از داده های مدلمون رو بتونیم بفرستیم
+```django
+views.py
+form .models import person
+from .serializer import Personserializer
+@api_view(['GET'])
+def say_hello(request):
+    persons       = person.objects.all()#for gett all informations from model
+    serlizer_data = PersonSerializer(instance=persons,many = True)# this line is for serialize information in models and instance is fot that and this thing just accept one information because of that we should set many=true because we use many informain
+    return Response(data=serlizer_data.data)#its must be a .data because its should return data only
+```
+خب بیا اول توضیح بدم معنی این کد ها رو 
+اولین خط که میاد اطلاعات رو از مدل ها میگیره
+خط دوم هم برای سریالایزر کردن اطلاعات توی مدل هست و اگه اطلاعات ما از یکی بیشتر بود باید منی رو ترو میزاشتیم
+خط سوم هم باید .data بزاریم که فقط دیتا رو نشون بده 
+براری زدن ای دی میتونیم از این رو در سریالایز کردن اضافه کنیم
+```django
+id = serializer.integerfield()
+```
+متیونیم فیلتر بزاریم و با استفاده از گت از اون استفاده کنیم
+```django
+form .models import person
+from .serializer import Personserializer
+@api_view(['GET'])
+def say_hello(request):
+    persons       = person.objects.get(name="amir")
+    serlizer_data = PersonSerializer(instance=persons)
+    return Response(data=serlizer_data.data)#its must be a .data because its should return data only
+```
+ولی باید منی رو برداریم چون فقط داریم یک اطلاعات رو نشون میدیم
+# register user 4
+توی این قسمت میخوایم یوزر رو ثبت نام کنیم برای اینکار
+یک اپ اکانت میسازیم
+بعد یک فایل سریالایزر براش درست میکنیم 
+برای یوزر 
+یوزرنیم داریم پسورد و ایمیل
+بعد از اون هر فیلد در سریالایزر یک ارگومانی میگیرن ولی برای استفاده و بعضی از ارگومان ها هستن که برای همه فیلد ها استفاده میشه مثل readonly و....
+به اینا میگن core argument البته الان کاری به اینا نداریم 
+و الان باید از required رو ترو بزاریم تا کاربر اونها رو وارد کنه
+بعد میریم توی ویوزو این کد رو مینویسیم
+```django
+@api_views(['POST'])
+def UserRegister(request):
+  serializer_data = UserRegiserserializer(data=request.POST)
+````
+اگه توجه کرده باشی ما در سریلایزر گفتیم instance ولی اینجا میگیم دیتا چون باید از کاربر اینا رو بگیریم
+که بعدا بتونیم روی اطلاعات کاربر بزنیم is_valid()
+خب اگه یادت باشه وقتی ما توی جنگو بودیم میزدیم که آیا اطلاعات کاربر درست هست یا نه باید از cleaned_data استفاده میکردیم
+ولی الان باید ی روش دیگه بریم
