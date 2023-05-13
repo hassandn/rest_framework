@@ -245,3 +245,16 @@ Object-level validation
       raise serializers.validationError("passwords are not match")
     return data
 ```
+
+یه روش دیگه هم وجود داره که وقتی مثلا یک فیلد باید چند تا ولیدیشن میخواد خوبه
+اسمش هم validators هست
+```django
+def no_spam(value):
+  if 'allah' != in value:
+   raise serializers.validationError('fields can not have a word 'allah' in it')
+```
+این تابع رو قبل از کلاس اضلی بزار
+بعدش داخل فیلد ها بنویس
+```django
+username = serilizers.Charfleid(validators=[no_spam])
+```
