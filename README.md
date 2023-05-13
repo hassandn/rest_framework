@@ -373,3 +373,29 @@ class RegisterUser(APIView):
 
 
 ```
+
+# status codes 8
+کد هایی که میان میگن ریکویست چه اتفاقی براش افتاد و در چه وضعیتی تموم شد
+منظورمون کد های وضعیت http هست که 5 عدد دارن 
+مثل 
+کد های 
+1XX informational 
+هستن
+2XX successful
+3XX redirection
+یعنی اون منبعی که در سرور دنبالش بودیم در سرور جابه جا شده
+4XX  client error
+5XX server error
+is_informational()  # 1xx
+is_success()        # 2xx
+is_redirect()       # 3xx
+is_client_error()   # 4xx
+is_server_error()   # 5xx
+
+خوانایی کد رو هم میبره بالاتر
+از این به بعد هر ریسپانسی که برمیگردونیم باید status code رو هم بهش بدیم
+کد ها رو درست بزار
+[link](https://www.django-rest-framework.org/api-guide/status-codes/)
+# authentication 9
+برای شناسایی کاربر هست
+برای اینکه مثلا دسترسی های کاربر رو قطع کنیم از پرمیشن ها استفاده میکنیم
