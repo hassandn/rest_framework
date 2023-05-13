@@ -331,3 +331,45 @@ Class UserRegisterSerializer(api_view):
     model = User
     fields = ['username','password','email','password']
 ```
+# override clean 7
+زمانی که ما یک مدل سریالایزر درست کردیم میتونیم از اون برای ساختن و یا اپدیت کردن یک آبجکت زوی اون مدل استفاده کنیم 
+توی فایل سریالایزر مینویسیم
+```djngo
+from rest_framework import serializers
+from django.contrib.auth.models import User
+
+
+def anti_spam(value):
+    if 'allah' in value:
+        raise serializers.ValidationError('fields dont have a allowed to use word `allah` in it')
+
+
+class RegisterUserSerializer(serializers.ModelSerializer):
+    password2 = serializers.CharField(write_only=True,required=True)
+    class Meta:
+        model = User
+        fields = ['username','password','password2','email']
+    
+    def create(self, validated_data):
+        del validated_data['password2']
+        return User.objects.create_user(**validated_data)
+```
+و در فایل ویوز باید بنویسیم
+```django
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import UserRgister
+from .serializers import RegisterUserSerializer
+from django.contrib.auth.models import User
+
+
+class RegisterUser(APIView):
+    def post(self,request):
+        serializer_data = RegisterUserSerializer(data=request.POST)
+        if serializer_data.is_valid():
+            serializer_data.create(serializer_data.validated_data)
+            return Response(serializer_data.data)
+        return Response(serializer_data.errors)
+
+
+```
