@@ -258,3 +258,39 @@ def no_spam(value):
 ```django
 username = serilizers.Charfleid(validators=[no_spam])
 ```
+# model serializers 6
+تاجایی که من فهیدم این همون کار قبلی رو انجام میده فقط تمیز تر
+مدل سریالایزر مثل همون مدل فرم ها بود 
+البته من یادم نمیاد چی بود مدل فرما فقط میدونم کاره راحت تری نسبت به مدل ها باید انجام میدادیم
+```django
+>>> from django.forms import ModelForm
+>>> from myapp.models import Article
+
+# Create the form class.
+>>> class ArticleForm(ModelForm):
+...     class Meta:
+...         model = Article
+...         fields = ["pub_date", "headline", "content", "reporter"]
+...
+
+# Creating a form to add an article.
+>>> form = ArticleForm()
+
+# Creating a form to change an existing article.
+>>> article = Article.objects.get(pk=1)
+>>> form = ArticleForm(instance=article)
+```
+یه همچین چیزی بوده
+کاربرد های مدل سریالایزر ها از سریالایزر ها بیشتر هست
+خب برای اینکه از مدل سریالایزر ها استفاده کنیم باید به این صورت عمل کنیم
+```django
+from django.contrib.auth.models import User
+class UserRegisterSerializer(api_veiw):
+  class META:
+      model = User
+      fields = ['username','password','email']
+      # or
+      fields = "__all__"
+      # its means every thing except this things
+      excludes = ['usernema'] # everything but username
+```
