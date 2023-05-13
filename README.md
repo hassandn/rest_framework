@@ -207,3 +207,19 @@ def UserRegister(request):
 که بعدا بتونیم روی اطلاعات کاربر بزنیم is_valid()
 خب اگه یادت باشه وقتی ما توی جنگو بودیم میزدیم که آیا اطلاعات کاربر درست هست یا نه باید از cleaned_data استفاده میکردیم
 ولی الان باید ی روش دیگه بریم
+اینا رو ی بار نوشتم دستم خورد کامیت نشده رفت بیرون 
+```django
+class userregister(api_view):
+  def post(self,request):
+    serializer_data = UserRegisterSerializer(data=request.POST)
+    if serializer_data.is_valid():
+      User.objects.create_user(
+        username =  serializer.data['username']
+        password =  serializer.data['password']
+        email    =  serializer.data['email']
+        return Response(serializer_data.data)
+      )
+    return Response(serializer_data.errors)
+````
+# custom validator 5
+توی این قسمت میخوایم 
