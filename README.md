@@ -222,4 +222,26 @@ class userregister(api_view):
     return Response(serializer_data.errors)
 ````
 # custom validator 5
-توی این قسمت میخوایم 
+توی این قسمت میخوایم درمورد ولیدیشن صبحت کنیم که قراره درمورد دو نووع از اونها صبحت کنیم
+دوتا قسمت داره
+Field-level validation
+Object-level validation
+در فیلد لول ما میایم وقتی میخوایم یک فیلد خاص رو ولیدیت کنیم استفاده میکنیم مثلا میایم میگیم که کاربر عادی باشه و ادمین نباشه
+یا اینکه یک فیلد دیگه از پسورد درست میکنیم 
+برای اینکار یک سری کار ها باید انجام بدیم
+اول باید یک تابع درست کنیم در فایل serializers.py بعدش اسمش اولش باید validata_title باشه که دو ارگومان میگیره
+```
+  def validate_title(self,value):
+    if value == 'amdin':
+      raise serializers.validationError("you cant be a admin")
+    return vlaue
+```
+این میگه که اگه اسم رو گذاشت ادمین بهش بگه که تو نمیتونی اسم ادمین رو انتخاب کنی
+یک کار دیگه ای که میشه باهاش کرد اینکه بهش پسورد کانفیگ اضافه کنیم
+به این کار میگن ابجکت لول چون داریم چند چیز رو باهم مقایسه میکنم فکر کنیم
+```django
+  def validate(self,data):
+    if data['password'] != data['password2']:
+      raise serializers.validationError("passwords are not match")
+    return data
+```
