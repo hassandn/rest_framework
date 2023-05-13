@@ -294,3 +294,40 @@ class UserRegisterSerializer(api_veiw):
       # its means every thing except this things
       excludes = ['usernema'] # everything but username
 ```
+خب این میاد و مثل قبل کار میکنه 
+برای اینکه بریم و رایت انلی کنیم یک فیلد رو میتونیم از دیکشنری extra_kwargs استفاده میکنیم
+پس داریم
+```django
+from django.contrib.auth.models import User
+Class UserRegisterSerializer(api_view):
+  class Meta:
+    model = User
+    fields = ['username','password','email']
+    extra_kwargs = {'password':{"read_only":true}}
+```
+حالا ما تو روش قبلی ولیدیتور ها رو میزاشتیم جای پارامترا ولی حالا میزاریم این کار رو انجام میدیم
+```django
+from django.contrib.auth.models import User
+def anti_sapm(value):
+    if 'admin'==value:
+      serializers.validationError('fields can not have a word 'admin' in it')
+     return value
+Class UserRegisterSerializer(api_view):
+    class Meta:
+        model = User
+        fields= ['username','password','emial']
+        extra_kwargs = {'username':{'read_only':true},
+        {"email":{"validators":anti_spam}
+        
+        }
+```
+خب حالا فرض کن که میخوایم فیلدی رو اضافه کنیم که داخل ماژول ما نبوده برای اینکار کافیه که قبل از کلاس متا اون رو اضافه کنیم
+به این صورت 
+
+```django
+Class UserRegisterSerializer(api_view):
+  password2 = Serializer.Charfield(required=true,write_only=true)
+  class Meta:
+    model = User
+    fields = ['username','password','email','password']
+```
