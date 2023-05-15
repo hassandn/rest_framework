@@ -411,6 +411,16 @@ is_server_error()   # 5xx
 با منیج . پای هم میشه اینکار رو انجام داد
 وقتی که توکن رو مشخص کردیم میتونیم نوع اثتنتیکیشن رو مشخص کنیم
 
+یادت نره ختما توی تنظیمات این رو بنویسی
+```django
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.authtoken'
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+```
 [link](https://www.django-rest-framework.org/api-guide/authentication/)
 # permessions 10
 با پرمیشن ها میتونیم محدودیت بزاریم روی ویو هامون
@@ -418,3 +428,4 @@ is_server_error()   # 5xx
 اگه یک نفر اجازه نداشته باشه یا 
 exceptions.PermissionDenied or exceptions.NotAuthenticated
 چون لازم نیست روی همه ویو ها اتفاقات خاصی بیوفته به جای اثتنیکیشن ما باید روی بعضی از ویوهامون از پرمیشن هامون استفاده کنیم
+اینا رو دیگه خودت برو ببین خسته شدم
