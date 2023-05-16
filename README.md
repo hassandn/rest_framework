@@ -489,3 +489,23 @@ class AnswerSerializer(serializers.ModelSerializer):
 		model = Answer
 		fields = '__all__'
 ```
+عملیات کراد کرید رید اپدیت و دلت
+# update-delete 12
+برای ساختن که باید از متد پست استفاده کنیم مثل همون کاری که قبلا انجام دادیم
+```django
+class questions(api_View):
+	def post(self,request):
+		serializer_data = Questionserializer(request.post)#or request.data
+		if serilizer_data.is_valid():
+			serializer_data.save()
+			return response(serilizer_data.data)
+		return response(serilizer_data.errors)
+```
+دبلیلی که انقد راحت سیو رو زد این بود که ما از مدل فرم ها در دیتا بیسمون استفاده کرده بودیم 
+برای همین اینطوری شد وگرنه باید خودمون به صورت دستی این کار رو انجام میدادیم
+بهتره که برای هر کار یک کلاس جداگونه درست کنیم 
+برای اپدیت کردن ما نیاز به پرایمری کی داریم تا بدونیم کدوم ابجکت رو میخوایم اپدیت کنیم 
+```django
+def put(self,request,pk):
+	
+```
