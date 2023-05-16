@@ -429,3 +429,63 @@ REST_FRAMEWORK = {
 exceptions.PermissionDenied or exceptions.NotAuthenticated
 چون لازم نیست روی همه ویو ها اتفاقات خاصی بیوفته به جای اثتنیکیشن ما باید روی بعضی از ویوهامون از پرمیشن هامون استفاده کنیم
 اینا رو دیگه خودت برو ببین خسته شدم
+
+# question answer 11
+توی این جلسه ای پی ای رو بسازه که کاربر ها بتونن سوال بپرسن و ی سری دیگه از کاربر ها بیان و بهش جواب بدن
+اول میاد و یک مدل برای سوال ها و یک مدل برای جواب ها میسازه که من در ادامه اونها رو اضاقه خواهم کرد
+خب اول از همه اومد و یک مدل برای سوال ها ایجاد کرد
+```django
+class Question(models.Model):
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='questions')
+	title = models.CharField(max_length=200)
+	slug = models.SlugField(max_length=200)
+	body = models.TextField()
+	created = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return f'{self.user} - {self.title[:20]}'
+
+	def __str__(self):
+		return f'{self.user} - {self.question.title[:20]}'
+```
+خب توی این کد میاد فیلد ها رو مشخص میکنه در خط یوزر اونحا که زده ان دلت منظورش اینکه اگه این پاک شده بقیه جاها هم پاک بشه فکر کنم تا جایی که یادمه 
+بعدیش هم یوزر هست که ایدی یوزری که اونو فرستاده داخلش هست
+در خط سوال نمیدونم الان چرا سوالو دوباره تو خودش اورده 
+و اینها رو به عنوان فارن کی اضافه کرده 
+در کریتد هم تاریخ همون لحظه رو خودش به صورت خودکار مینویسه
+و بعدشم که تابع اس تی ار هست که در ادمین پنل این ها رو نمایش میده 
+که اسم یوزر و 20 تا کاراکتر اول سوالش رو نشون میده برای ادمین
+اشتباه کردم
+کست کیت هم میگه اگه یوزر اون ور پاک کرد تو بقیه جاها تو هم پاکش کن
+
+```django
+class Answer(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='answers')
+	question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
+	body = models.TextField()
+	created = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return f'{self.user} - {self.question.title[:20]}'
+```
+اینجا در خط سوال نوشته شده که به جواب لینک شده
+خب بعدش اون ها رو توی سریالایزر اضافه میکنیم
+و بعد در ویو ما یک کلاس اضافه میکنیم که متد های مختلفی رو میگیره مثل get post put delete
+که گت برای دیدن اطلاعات هست پست برای ارسال اطلاعات و پوت برای اپدیت کردن اطلاعات و دلت برای پاک کردن اطلاعات
+
+
+```djngao
+class QuestionSerializer(serializers.ModelSerializer):
+	answers = serializers.SerializerMethodField()
+	user = UserEmailNameRelationalField(read_only=True)
+
+	class Meta:
+		model = Question
+		fields = '__all__'
+
+
+class AnswerSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Answer
+		fields = '__all__'
+```
