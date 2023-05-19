@@ -639,3 +639,41 @@ TokenRefreshView برای اینکه توکن رو عوض کنه
 توی این ویدیو در مورد داکیومنت درست کردن در مورد ای پی ایمون میگیم  
 برای اینکه کاربر بدونه توی هر یو ار الی چه اطلاعاتی هست 
 مثلا برای بک نوشتی فرانت کارا میخوان ببینن
+sshema ی داکیومنتی هست برای ماشین ها که میگه در هر یو ار الی چه چیزهایی هست
+برای اینکه این اطلاعات رو طوری بنویسیم که آدم ها هم بتونن اون رو بخونن میتونیم از محیط های گرافیکی مقل swaggger استفاده کنیم
+برای استفاده از اون اول باید این کامند رو بزنیم 
+```django
+pip install pyyaml uritemplate
+```
+بعد در فایل یوار ال فولدر کانفیگ باید این رو اضافه کنیم 	
+```django
+from rest_framework.schemas import get_schema_view
+
+urlpatterns = [
+    # ...
+    # Use the `get_schema_view()` helper to add a `SchemaView` to project URLs.
+    #   * `title` and `description` parameters are passed to `SchemaGenerator`.
+    #   * Provide view name for use with `reverse()`.
+    path('openapi', get_schema_view(
+        title="Your Project",
+        description="API for all things …",
+        version="1.0.0"
+    ), name='openapi-schema'),
+    # ...
+]
+```
+اینجا چون سخته برامون که بخونیم و اطلاعات رو به صورت یمل نوشته خوندن اطلاعات برای ما مشکل هست برای همین ما میایم و نحوه نمایشش رو عوض میکنیم
+برای اینکار ما باید از سواگر ها استفاده کنیم 
+میتونی از drf-yasg استفاده کنی که قدیمی شده و دیگه کسی اون رو توسعه نمیده و یا میتونی از یکی دیگه استفاده کنی به اسم drf-spectacular
+[link](https://www.django-rest-framework.org/topics/documenting-your-api/)
+برای دیسکربپشن باید داخل خوده اون کلاس از این علامت استفاده کنی 
+```django
+"""
+your descrepsiton
+"""
+```
+برای اینکه قسمت پارامتر هاشم درست بشه میتونی از این روش استفاده کنی
+```django
+serializer_class=something_serializer()
+```
+اینطوری میاد ی مثال هم میزنه که باید چی ها رو بفرستیم و این داستانا 
